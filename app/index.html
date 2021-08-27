@@ -1,0 +1,47 @@
+---
+title: toDoList | 今天要做甚麼?
+layout: ./app/layout.ejs
+engine: ejs
+current: index
+---
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-8 col-lg-6 mx-auto">
+      <h1 class="text-center mb-3">TODO LIST</h1>
+      <section v-if="hasLogin">
+        <div class="input-group mb-3 sticky-top">
+          <input type="text" class="form-control" v-model="toDo" placeholder="請輸入代辦事項" @keyup.enter="postData">
+          <button class="btn btn-outline-secondary bg-dark text-white d-flex p-2" type="button" @click="postData">
+            <span class="material-icons-outlined">add</span>  
+          </button>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <p class="">
+            <span class="fst-italic">{{ Object.keys(toDoList).length }}</span>  
+            個待完成項目
+          </p>
+          <input type="button" value="清空全部" class="btn btn-outline-primary" @click="deleteAll">
+        </div>
+        <ul class="list-group shadow mb-3">
+          <li v-for="item in toDoList" :key="item.key" class="list-group-item d-flex justify-content-between align-items-center border-0">
+            <label class="checkbox" for="">
+              <input type="checkbox" />
+              <span>{{ item.toDo }}</span>
+            </label>
+            <button type="button" class="btn btn-link d-flex p-2 border-0" @click="deleteData(item.key)">
+              <span class="material-icons-outlined text-black-50">close</span>              
+            </button>
+          </li>
+  
+        </ul>
+      </section>
+      <div class="d-flex justify-content-center px-3">
+        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="provider" v-if="!hasLogin">
+          <img src="assets/images/google.svg" alt="google" class="me-3">
+          透過 Google 登入
+        </button>
+        <input type="button" value="登出" class="btn btn-outline-light text-black-50" @click="signOut" v-if="hasLogin">
+      </div>
+    </div>
+  </div>
+</div>

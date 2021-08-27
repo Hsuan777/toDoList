@@ -1,0 +1,29 @@
+
+body {
+  overflow-x: hidden;
+  background-image: linear-gradient(
+    174deg,
+    $secondary 2%,
+    $secondary 46%,
+    #ffffff 46%,
+    #ffffff 100%,
+    #e8e8e8 100%
+  );
+  background-repeat: no-repeat;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+
+h1 {
+  letter-spacing: 0.5rem;
+}
+
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, ul, p, figure {
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
