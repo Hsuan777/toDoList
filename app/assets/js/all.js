@@ -91,7 +91,7 @@ const app = Vue.createApp({
     },
     cleanData() {
       this.hasLogin = false;
-      this.toDoList = [];
+      this.toDoList = {};
       this.uid = '';
     },
   },
