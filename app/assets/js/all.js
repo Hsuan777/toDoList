@@ -56,7 +56,7 @@ const app = Vue.createApp({
       db.ref(`${this.uid}`).remove();
     },
     // google 登入
-    provider() {
+    googleLogin() {
       const provider = new firebase.auth.GoogleAuthProvider();
       const vm = this;
       firebase.auth().signInWithPopup(provider).then(function (result) {

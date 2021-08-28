@@ -1,5 +1,5 @@
 ---
-title: toDoList | 今天要做甚麼?
+title: 今天要做甚麼? ｜記錄您的代辦清單
 layout: ./app/layout.ejs
 engine: ejs
 current: index
@@ -36,7 +36,7 @@ current: index
         </ul>
       </section>
       <div class="d-flex justify-content-center px-3">
-        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="provider" v-if="!hasLogin">
+        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="googleLogin" v-if="!hasLogin">
           <img src="assets/images/google.svg" alt="google" class="me-3">
           透過 Google 登入
         </button>
