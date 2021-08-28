@@ -56,7 +56,7 @@ var app = Vue.createApp({
       db.ref("".concat(this.uid)).remove();
     },
     // google 登入
-    provider: function provider() {
+    googleLogin: function googleLogin() {
       var provider = new firebase.auth.GoogleAuthProvider();
       var vm = this;
       firebase.auth().signInWithPopup(provider).then(function (result) {
@@ -64,6 +64,22 @@ var app = Vue.createApp({
         // const credential = result.credential;
         // const token = result.credential.accessToken;
         // const user = result.user;
+        vm.onAuthState();
+      });
+    },
+    facebookLogin: function facebookLogin() {
+      var provider = new firebase.auth.FacebookAuthProvider();
+      var vm = this;
+      provider.addScope('user_birthday');
+      provider.setCustomParameters({
+        'display': 'popup'
+      });
+      firebase.auth().signInWithPopup(provider).then(function (result) {
+        // 取得FB Token，可以使用於FB API中
+        var token = result.credential.accessToken; // 使用者資料
+
+        var FBUser = result.user;
+        console.log(FBUser);
         vm.onAuthState();
       });
     },
@@ -94,7 +110,7 @@ var app = Vue.createApp({
     },
     cleanData: function cleanData() {
       this.hasLogin = false;
-      this.toDoList = [];
+      this.toDoList = {};
       this.uid = '';
     }
   },

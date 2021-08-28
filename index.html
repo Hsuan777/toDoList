@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>toDoList | 今天要做甚麼?</title>
+    <title>今天要做甚麼? ｜記錄您的代辦清單</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -49,9 +49,13 @@
         </ul>
       </section>
       <div class="d-flex justify-content-center px-3">
-        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="provider" v-if="!hasLogin">
+        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="googleLogin" v-if="!hasLogin">
           <img src="assets/images/google.svg" alt="google" class="me-3">
           透過 Google 登入
+        </button>
+        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="facebookLogin" v-if="!hasLogin">
+          <img src="assets/images/favebook.svg" alt="google" class="me-3">
+          透過 Facebook 登入
         </button>
         <input type="button" value="登出" class="btn btn-outline-light text-black-50" @click="signOut" v-if="hasLogin">
       </div>
