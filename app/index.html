@@ -40,6 +40,10 @@ current: index
           <img src="assets/images/google.svg" alt="google" class="me-3">
           透過 Google 登入
         </button>
+        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="facebookLogin" v-if="!hasLogin">
+          <i class="fab fa-facebook-f me-3 text-blue"></i>
+          透過 Facebook 登入
+        </button>
         <input type="button" value="登出" class="btn btn-outline-light text-black-50" @click="signOut" v-if="hasLogin">
       </div>
     </div>

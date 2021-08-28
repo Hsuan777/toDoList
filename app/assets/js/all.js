@@ -67,6 +67,22 @@ const app = Vue.createApp({
         vm.onAuthState();
       });
     },
+    facebookLogin() {
+      const provider = new firebase.auth.FacebookAuthProvider();
+      const vm = this;
+      provider.addScope('user_birthday');
+      provider.setCustomParameters({
+        'display': 'popup'
+      }); 
+      firebase.auth().signInWithPopup(provider).then(function(result) {
+        // 取得FB Token，可以使用於FB API中
+        const token = result.credential.accessToken;
+        // 使用者資料
+        const FBUser = result.user;
+        console.log(FBUser);
+        vm.onAuthState();
+      })
+    },
     // 登出
     signOut() {
       firebase.auth().signOut().then(() => {
