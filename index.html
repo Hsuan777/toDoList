@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>今天要做甚麼? ｜記錄您的代辦清單</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined" rel="stylesheet"> 
+    <title>今天要做甚麼? ｜記錄您的代辦清單</title>
     <link rel="stylesheet" href="./assets/style/all.css">
   </head>
 
@@ -54,7 +55,7 @@
           透過 Google 登入
         </button>
         <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="facebookLogin" v-if="!hasLogin">
-          <img src="assets/images/favebook.svg" alt="google" class="me-3">
+          <i class="fab fa-facebook-f me-3 text-blue"></i>
           透過 Facebook 登入
         </button>
         <input type="button" value="登出" class="btn btn-outline-light text-black-50" @click="signOut" v-if="hasLogin">
