@@ -22,7 +22,12 @@ var app = Vue.createApp({
       toDo: '',
       hasLogin: false,
       uid: '',
-      nullKey: ''
+      totalTime: 0,
+      seconds: 60,
+      minutes: 25,
+      countDown: null,
+      started: false,
+      percent: 0
     };
   },
   methods: {
@@ -112,9 +117,50 @@ var app = Vue.createApp({
       this.hasLogin = false;
       this.toDoList = {};
       this.uid = '';
+    },
+    start: function start() {
+      var _this2 = this;
+
+      this.started = true;
+      this.countDown = setInterval(function () {
+        _this2.totalTime -= 1;
+
+        if (_this2.totalTime === 0) {
+          clearInterval(_this2.countDown);
+        }
+      }, 1000);
+    },
+    stop: function stop() {
+      this.started = false;
+      clearInterval(this.countDown);
+    },
+    reStart: function reStart() {
+      this.started = false;
+      this.totalTime = this.minutes * this.seconds;
+      clearInterval(this.countDown);
+    },
+    formatTime: function formatTime(num) {
+      if (num < 10) {
+        return '0' + num;
+      } else {
+        return num;
+      }
+    }
+  },
+  computed: {
+    timeLeft: function timeLeft() {
+      var min = Math.floor(this.totalTime / 60);
+      var sec = this.totalTime % 60;
+      return "".concat(this.formatTime(min), " : ").concat(this.formatTime(sec));
+    }
+  },
+  watch: {
+    totalTime: function totalTime(newValue) {
+      this.percent = Math.floor(newValue / (this.minutes * this.seconds) * 100);
     }
   },
   mounted: function mounted() {
+    this.reStart();
     this.onAuthState();
   }
 }).mount('#app');

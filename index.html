@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined" rel="stylesheet"> 
-    <title>今天要做甚麼? ｜記錄您的代辦清單</title>
+    <title>待辦清單 x 番茄鐘 | toDoList</title>
     <link rel="stylesheet" href="./assets/style/all.css">
   </head>
 
@@ -23,6 +23,28 @@
     <div class="col-md-8 col-lg-6 mx-auto">
       <h1 class="text-center mb-3">TODO LIST</h1>
       <section v-if="hasLogin">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="progress me-3 w-100">
+            <div 
+              class="progress-bar"
+              :class="{'bg-warning': percent < 50,  'bg-danger' : percent < 10, 'progress-bar-striped': started, 'progress-bar-animated': started}" 
+              :style="`width: ${percent}%`" 
+              role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+              {{timeLeft}}
+            </div>
+          </div>
+          <div class="d-flex">
+            <button type="button" value="開始倒數" class="btn btn-primary d-flex p-2" @click="start" v-if="!started">
+              <span class="material-icons-outlined text-white">timer</span>             
+            </button>
+            <button type="button" value="暫停" class="btn btn-primary d-flex p-2 me-3" @click="stop" v-if="started">
+              <span class="material-icons-outlined text-white">stop_circle</span>  
+            </button>
+            <button type="button" value="重新開始" class="btn btn-primary d-flex p-2" @click="reStart" v-if="started">
+              <span class="material-icons-outlined text-white">restore</span>  
+            </button>
+          </div>
+        </div>
         <div class="input-group mb-3 sticky-top">
           <input type="text" class="form-control" v-model="toDo" placeholder="請輸入代辦事項" @keyup.enter="postData">
           <button class="btn btn-outline-secondary bg-dark text-white d-flex p-2" type="button" @click="postData">
@@ -46,7 +68,6 @@
               <span class="material-icons-outlined text-black-50">close</span>              
             </button>
           </li>
-  
         </ul>
       </section>
       <div class="d-flex justify-content-center px-3">
