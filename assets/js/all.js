@@ -2,13 +2,13 @@
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
-  apiKey: "AIzaSyDQv3-yDg_Fu6UVZYz9YWMbh3ka1m8NwiA",
-  authDomain: "webtest2-c2d0c.firebaseapp.com",
-  databaseURL: "https://webtest2-c2d0c-default-rtdb.firebaseio.com",
-  projectId: "webtest2-c2d0c",
-  storageBucket: "webtest2-c2d0c.appspot.com",
-  messagingSenderId: "1003425564921",
-  appId: "1:1003425564921:web:31710ac40e85a41bbbba28"
+  apiKey: "AIzaSyD1NqNVJuZyWRWTIn6JPFWDv3E7cPZdjws",
+  authDomain: "to-do-list-21e2c.firebaseapp.com",
+  databaseURL: "https://to-do-list-21e2c-default-rtdb.firebaseio.com",
+  projectId: "to-do-list-21e2c",
+  storageBucket: "to-do-list-21e2c.appspot.com",
+  messagingSenderId: "174717852507",
+  appId: "1:174717852507:web:305e301fdb95df65d0d87e"
 }; // Initialize Firebase
 
 firebase.initializeApp(firebaseConfig); // firebase 資料庫
