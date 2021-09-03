@@ -1337,8 +1337,8 @@ $alert-dismissible-padding-r:   $alert-padding-x * 3 !default; // 3x covers widt
 // Progress bars
 
 // scss-docs-start progress-variables
-$progress-height:                   1rem !default;
-$progress-font-size:                $font-size-base * .75 !default;
+$progress-height:                   1.5rem;
+$progress-font-size:                $font-size-base;
 $progress-bg:                       $gray-200 !default;
 $progress-border-radius:            $border-radius !default;
 $progress-box-shadow:               $box-shadow-inset !default;

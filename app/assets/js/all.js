@@ -35,7 +35,10 @@ const app = Vue.createApp({
       const vm = this;
       // 取得屬性值
       db.ref(`${vm.uid}`).on('value', (snapshot) => {
-        vm.toDoList = snapshot.val() || {};
+        vm.toDoList = [];
+        Object.entries(snapshot.val() || {}).forEach(item => {
+          vm.toDoList.push(item[1]);
+        })
       })
     },
     postData() {
@@ -94,6 +97,7 @@ const app = Vue.createApp({
         this.onAuthState();
         alert('已登出');
       })
+      this.reStart();
     },
     // 監聽登入狀態
     onAuthState() {
