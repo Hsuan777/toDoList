@@ -36,8 +36,9 @@ const app = Vue.createApp({
       // 取得屬性值
       db.ref(`${vm.uid}`).on('value', (snapshot) => {
         vm.toDoList = [];
-        Object.entries(snapshot.val() || {}).forEach(item => {
+        Object.entries(snapshot.val() || {}).forEach((item, index) => {
           vm.toDoList.push(item[1]);
+          vm.toDoList[index].order = index;
         })
       })
     },
@@ -54,11 +55,20 @@ const app = Vue.createApp({
         key: key,
         toDo: this.toDo,
         date: new Date().getTime(),
+        order: this.toDoList.length + 1
       })
       this.toDo = '';
     },
+    updateData() {
+      let tempObj = {};
+      this.toDoList.forEach(item => {
+        tempObj[item.key] = item;
+      })
+      db.ref(`${this.uid}`).update(tempObj)
+    },
     deleteData(key) {
       db.ref(`${this.uid}`).child(key).remove();
+      this.updateData();
     },
     deleteAll() {
       db.ref(`${this.uid}`).remove();
@@ -84,10 +94,9 @@ const app = Vue.createApp({
       }); 
       firebase.auth().signInWithPopup(provider).then(function(result) {
         // 取得FB Token，可以使用於FB API中
-        const token = result.credential.accessToken;
+        // const token = result.credential.accessToken;
         // 使用者資料
-        const FBUser = result.user;
-        console.log(FBUser);
+        // const FBUser = result.user;
         vm.onAuthState();
       })
     },
