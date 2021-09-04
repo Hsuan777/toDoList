@@ -56,12 +56,20 @@
           </p>
           <input type="button" value="清空全部" class="btn btn-outline-primary" @click="deleteAll">
         </div>
+        <!-- 分類頁籤 -->
         <nav>
           <div class="nav nav-tabs border-0" id="nav-tab" role="tablist">
-            <button class="nav-link flex-grow-1 active" id="nav-await-tab" data-bs-toggle="tab" data-bs-target="#nav-await" type="button" role="tab" aria-controls="nav-await" aria-selected="true">待完成</button>
-            <button class="nav-link flex-grow-1" id="nav-finished-tab" data-bs-toggle="tab" data-bs-target="#nav-finished" type="button" role="tab" aria-controls="nav-finished" aria-selected="false">已完成</button>
+            <button class="nav-link flex-grow-1 active" id="nav-await-tab" data-bs-toggle="tab" data-bs-target="#nav-await" type="button" role="tab" aria-controls="nav-await" aria-selected="true">
+              待完成
+              <span v-if="awaitData.length >= 1">({{ awaitData.length }})</span>
+            </button>
+            <button class="nav-link flex-grow-1" id="nav-finished-tab" data-bs-toggle="tab" data-bs-target="#nav-finished" type="button" role="tab" aria-controls="nav-finished" aria-selected="false">
+              已完成
+              <span v-if="finishedData.length >= 1">({{ finishedData.length }})</span>
+            </button>
           </div>
         </nav>
+        <!-- 分類內容 -->
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade show active" id="nav-await" role="tabpanel" aria-labelledby="nav-await-tab">
             <ul class="list-group shadow mb-3">
