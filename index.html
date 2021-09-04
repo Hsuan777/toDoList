@@ -78,8 +78,13 @@
               </li>
               <li v-for="item in awaitData" :key="item.key" draggable="true"
                 class="list-group-item d-flex justify-content-between align-items-center py-0" @drop="dropped"
-                @dragenter="dragEnter" @dragover="dragOver(item.order, $event)" @dragleave="dragLeave" draggable="true"
-                @dragstart="dragStart(item.order, $event)" @dragend="dragEnd">
+                @dragstart="dragStart(item.order, $event)"
+                @dragenter="dragEnter" 
+                @dragover="dragOver(item.order, $event)"
+                @dragleave="dragLeave" draggable="true"
+                @dragend="dragEnd"
+                @touchstart="dragStart(item.order, $event)"
+                @touchend="dragEnd">
                 <button type="button" class="draggable__btn btn btn-link d-flex p-0 me-5 border-0">
                   <span class="material-icons-outlined text-black-50">drag_indicator</span>
                 </button>
