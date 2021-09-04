@@ -18,24 +18,36 @@ var db = firebase.database(); // Vue
 var app = Vue.createApp({
   data: function data() {
     return {
+      // toDoList
       toDoList: {},
       toDo: '',
       hasLogin: false,
       uid: '',
       totalTime: 0,
+      // 番茄鐘
       seconds: 60,
       minutes: 25,
       countDown: null,
       started: false,
-      percent: 0
+      percent: 0,
+      // 拖曳元素
+      targetSource: '',
+      newIndex: '',
+      oldIndex: ''
     };
   },
   methods: {
+    /* toDoList */
     getData: function getData() {
       var vm = this; // 取得屬性值
 
       db.ref("".concat(vm.uid)).on('value', function (snapshot) {
-        vm.toDoList = snapshot.val() || {};
+        vm.toDoList = [];
+        Object.entries(snapshot.val() || {}).forEach(function (item, index) {
+          vm.toDoList.push(item[1]);
+          vm.toDoList[index].order = index;
+        });
+        console.log(vm.toDoList);
       });
     },
     postData: function postData() {
@@ -50,12 +62,28 @@ var app = Vue.createApp({
         // 加入相同 key 值，方便刪除
         key: key,
         toDo: this.toDo,
-        date: new Date().getTime()
+        date: new Date().getTime(),
+        order: this.toDoList.length + 1,
+        checked: false
       });
       this.toDo = '';
     },
+    updateChecked: function updateChecked(item) {
+      var tempObj = item;
+      tempObj.checked = !tempObj.checked;
+      db.ref("".concat(this.uid)).child(item.key).update(tempObj);
+    },
+    updateDataAll: function updateDataAll() {
+      var tempObj = {};
+      this.toDoList.forEach(function (item) {
+        tempObj[item.key] = item;
+      });
+      db.ref("".concat(this.uid)).update(tempObj);
+      this.getData();
+    },
     deleteData: function deleteData(key) {
       db.ref("".concat(this.uid)).child(key).remove();
+      this.updateDataAll();
     },
     deleteAll: function deleteAll() {
       db.ref("".concat(this.uid)).remove();
@@ -81,10 +109,9 @@ var app = Vue.createApp({
       });
       firebase.auth().signInWithPopup(provider).then(function (result) {
         // 取得FB Token，可以使用於FB API中
-        var token = result.credential.accessToken; // 使用者資料
-
-        var FBUser = result.user;
-        console.log(FBUser);
+        // const token = result.credential.accessToken;
+        // 使用者資料
+        // const FBUser = result.user;
         vm.onAuthState();
       });
     },
@@ -97,6 +124,7 @@ var app = Vue.createApp({
 
         alert('已登出');
       });
+      this.reStart();
     },
     // 監聽登入狀態
     onAuthState: function onAuthState() {
@@ -118,6 +146,8 @@ var app = Vue.createApp({
       this.toDoList = {};
       this.uid = '';
     },
+
+    /* 番茄鐘 */
     start: function start() {
       var _this2 = this;
 
@@ -139,19 +169,83 @@ var app = Vue.createApp({
       this.totalTime = this.minutes * this.seconds;
       clearInterval(this.countDown);
     },
-    formatTime: function formatTime(num) {
-      if (num < 10) {
-        return '0' + num;
-      } else {
-        return num;
+
+    /* 拖曳元素 */
+    // 開始拖曳，指得是要被拖曳的物件
+    dragStart: function dragStart(order, e) {
+      this.oldOrder = order;
+      this.targetSource = e.target;
+      this.targetSource.classList.add('list-group--hover');
+    },
+    // 放至有效的目標容器
+    dropped: function dropped(e) {
+      this.cancelDefault(e);
+
+      if (e.target === this.targetSource) {
+        return;
       }
+
+      e.target.classList.remove('list-group--hover');
+    },
+    // 拖曳結束，譬如放開滑鼠時，鍵盤 keyup 時
+    dragEnd: function dragEnd(e) {
+      e.target.classList.remove('list-group--hover');
+      this.changeData(this.oldOrder, this.newOrder);
+    },
+    // 進入目標容器
+    dragEnter: function dragEnter(e) {
+      this.cancelDefault(e); // 狀態很快會變成"經過容器"
+      // 當不是原本的目標容器時，變化 CSS 效果
+
+      if (e.target !== this.targetSource && e.target.tagName === 'LI') {
+        e.target.classList.add('list-group--hover', 'list-group--over');
+      }
+    },
+    // 經過目標容器
+    dragOver: function dragOver(order, e) {
+      this.cancelDefault(e);
+      this.newOrder = order; // 讓拖回原本的目標容器也會有 CSS 效果
+
+      if (e.target === this.targetSource) {
+        e.target.classList.add('list-group--hover');
+      }
+    },
+    // 離開容器
+    dragLeave: function dragLeave(e) {
+      this.cancelDefault(e); // e.target 指得是 li
+
+      e.target.classList.remove('list-group--hover', 'list-group--over');
+    },
+    // 取消預設行為
+    cancelDefault: function cancelDefault(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    changeData: function changeData(oldOrder, newOrder) {
+      var originToDo = this.toDoList[newOrder].toDo;
+      var originChecked = this.toDoList[newOrder].checked;
+      this.toDoList[newOrder].toDo = this.toDoList[oldOrder].toDo;
+      this.toDoList[newOrder].checked = this.toDoList[oldOrder].checked;
+      this.toDoList[oldOrder].toDo = originToDo;
+      this.toDoList[oldOrder].checked = originChecked;
+      this.updateDataAll();
     }
   },
   computed: {
+    // 格式化剩餘時間
     timeLeft: function timeLeft() {
       var min = Math.floor(this.totalTime / 60);
       var sec = this.totalTime % 60;
-      return "".concat(this.formatTime(min), " : ").concat(this.formatTime(sec));
+
+      var formatTime = function formatTime(num) {
+        if (num < 10) {
+          return '0' + num;
+        } else {
+          return num;
+        }
+      };
+
+      return "".concat(formatTime(min), " : ").concat(formatTime(sec));
     }
   },
   watch: {
