@@ -1,0 +1,15 @@
+[draggable="true"] {
+  cursor: move;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  .draggable {
+    &__btn {
+      &:focus, &:hover{
+        cursor: move;
+        box-shadow: none;
+      }
+    }
+  }
+}

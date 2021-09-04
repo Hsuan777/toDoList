@@ -1,12 +1,12 @@
 @import "node_modules/bootstrap/scss/functions";
 @import "./helpers/variables";
 @import "node_modules/bootstrap/scss/utilities";
-@import './helpers/utilities.scss';
+@import './helpers/utilities';
 @import "node_modules/bootstrap/scss/bootstrap";
 
 // project
-@import './helpers/base.scss';
-@import './components/components.scss';
+@import './helpers/base';
+@import './components/components';
 
 
 

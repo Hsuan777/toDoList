@@ -1,0 +1,8 @@
+.list-group {
+  &--hover {
+    background-color: map-get($theme-colors, "secondary");
+  }
+  &--over * {
+    pointer-events: none;
+  }
+}

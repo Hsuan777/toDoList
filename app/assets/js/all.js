@@ -18,19 +18,26 @@ const db = firebase.database();
 const app = Vue.createApp({
   data() {
     return {
+      // toDoList
       toDoList: {},
       toDo: '',
       hasLogin: false,
       uid: '',
       totalTime: 0,
+      // 番茄鐘
       seconds: 60,
       minutes : 25,
       countDown: null,
       started: false,
       percent: 0,
+      // 拖曳元素
+      targetSource: '',
+      newIndex: '',
+      oldIndex: ''
     }
   },
   methods: {
+    /* toDoList */
     getData() {
       const vm = this;
       // 取得屬性值
@@ -40,6 +47,7 @@ const app = Vue.createApp({
           vm.toDoList.push(item[1]);
           vm.toDoList[index].order = index;
         })
+        console.log(vm.toDoList);
       })
     },
     postData() {
@@ -55,20 +63,27 @@ const app = Vue.createApp({
         key: key,
         toDo: this.toDo,
         date: new Date().getTime(),
-        order: this.toDoList.length + 1
+        order: this.toDoList.length + 1,
+        checked: false,
       })
       this.toDo = '';
     },
-    updateData() {
+    updateChecked(item) {
+      let tempObj = item;
+      tempObj.checked = !tempObj.checked;
+      db.ref(`${this.uid}`).child(item.key).update(tempObj);
+    },
+    updateDataAll() {
       let tempObj = {};
       this.toDoList.forEach(item => {
         tempObj[item.key] = item;
       })
-      db.ref(`${this.uid}`).update(tempObj)
+      db.ref(`${this.uid}`).update(tempObj);
+      this.getData();
     },
     deleteData(key) {
       db.ref(`${this.uid}`).child(key).remove();
-      this.updateData();
+      this.updateDataAll();
     },
     deleteAll() {
       db.ref(`${this.uid}`).remove();
@@ -128,6 +143,7 @@ const app = Vue.createApp({
       this.toDoList = {};
       this.uid = '';
     },
+    /* 番茄鐘 */
     start() {
       this.started = true;
       this.countDown = setInterval(() => {
@@ -146,19 +162,78 @@ const app = Vue.createApp({
       this.totalTime = this.minutes * this.seconds;
       clearInterval(this.countDown);
     },
-    formatTime(num) {
-      if (num < 10) {
-        return '0' + num;
-      } else {
-        return num
+    /* 拖曳元素 */
+    // 開始拖曳，指得是要被拖曳的物件
+    dragStart(order, e) {
+      this.oldOrder = order;
+      this.targetSource = e.target;
+      this.targetSource.classList.add('list-group--hover');
+    },
+    // 放至有效的目標容器
+    dropped(e) {
+      this.cancelDefault(e)
+      if (e.target === this.targetSource) {
+        return ;
       }
-    }
+      e.target.classList.remove('list-group--hover');
+    },
+    // 拖曳結束，譬如放開滑鼠時，鍵盤 keyup 時
+    dragEnd(e) {
+      e.target.classList.remove('list-group--hover');
+      this.changeData(this.oldOrder, this.newOrder);
+    },
+    // 進入目標容器
+    dragEnter(e) {
+      this.cancelDefault(e)
+      // 狀態很快會變成"經過容器"
+      // 當不是原本的目標容器時，變化 CSS 效果
+      if (e.target !== this.targetSource && e.target.tagName === 'LI') {
+        e.target.classList.add('list-group--hover', 'list-group--over')
+      }
+    },
+    // 經過目標容器
+    dragOver(order, e) {
+      this.cancelDefault(e)
+      this.newOrder = order;
+      // 讓拖回原本的目標容器也會有 CSS 效果
+      if (e.target === this.targetSource) {
+        e.target.classList.add('list-group--hover')
+      }
+    },
+    // 離開容器
+    dragLeave(e) {
+      this.cancelDefault(e)
+      // e.target 指得是 li
+      e.target.classList.remove('list-group--hover', 'list-group--over')
+    },
+    // 取消預設行為
+    cancelDefault(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    changeData(oldOrder, newOrder) {
+      let originToDo = this.toDoList[newOrder].toDo; 
+      let originChecked = this.toDoList[newOrder].checked; 
+      this.toDoList[newOrder].toDo = this.toDoList[oldOrder].toDo
+      this.toDoList[newOrder].checked = this.toDoList[oldOrder].checked
+      this.toDoList[oldOrder].toDo = originToDo;
+      this.toDoList[oldOrder].checked = originChecked;
+      this.updateDataAll();
+    },
   },
   computed: {
+    // 格式化剩餘時間
     timeLeft() {
       let min = Math.floor(this.totalTime / 60);
       let sec = this.totalTime % 60;
-      return `${this.formatTime(min)} : ${this.formatTime(sec)}`;
+      const formatTime = (num) => {
+        if (num < 10) {
+          return '0' + num;
+        } else {
+          return num
+        }
+      }
+      return `${formatTime(min)} : ${formatTime(sec)}`;
     },
   },
   watch: {

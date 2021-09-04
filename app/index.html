@@ -11,57 +11,65 @@ current: index
       <section v-if="hasLogin">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div class="progress me-3 w-100">
-            <div 
-              class="progress-bar"
-              :class="{'bg-warning': percent < 50,  'bg-danger' : percent < 10, 'progress-bar-striped': started, 'progress-bar-animated': started}" 
-              :style="`width: ${percent}%`" 
-              role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar"
+              :class="{'bg-warning': percent < 50,  'bg-danger' : percent < 10, 'progress-bar-striped': started, 'progress-bar-animated': started}"
+              :style="`width: ${percent}%`" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
               {{timeLeft}}
             </div>
           </div>
           <div class="d-flex">
             <button type="button" value="開始倒數" class="btn btn-primary d-flex p-2" @click="start" v-if="!started">
-              <span class="material-icons-outlined text-white">timer</span>             
+              <span class="material-icons-outlined text-white">timer</span>
             </button>
             <button type="button" value="暫停" class="btn btn-primary d-flex p-2 me-3" @click="stop" v-if="started">
-              <span class="material-icons-outlined text-white">stop_circle</span>  
+              <span class="material-icons-outlined text-white">stop_circle</span>
             </button>
             <button type="button" value="重新開始" class="btn btn-primary d-flex p-2" @click="reStart" v-if="started">
-              <span class="material-icons-outlined text-white">restore</span>  
+              <span class="material-icons-outlined text-white">restore</span>
             </button>
           </div>
         </div>
         <div class="input-group mb-3 sticky-top">
           <input type="text" class="form-control" v-model="toDo" placeholder="請輸入代辦事項" @keyup.enter="postData">
           <button class="btn btn-outline-secondary bg-dark text-white d-flex p-2" type="button" @click="postData">
-            <span class="material-icons-outlined">add</span>  
+            <span class="material-icons-outlined">add</span>
           </button>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-3">
           <p class="">
-            <span class="fst-italic">{{ Object.keys(toDoList).length }}</span> 
+            <span class="fst-italic">{{ Object.keys(toDoList).length }}</span>
             個待完成項目
           </p>
           <input type="button" value="清空全部" class="btn btn-outline-primary" @click="deleteAll">
         </div>
         <ul class="list-group shadow mb-3">
-          <li v-for="item in toDoList" :key="item.key" class="list-group-item d-flex justify-content-between align-items-center border-0">
-            <label class="checkbox" for="">
-              <input type="checkbox" />
-              <span>{{ item.toDo }}</span>
-            </label>
+          <li v-for="item in toDoList" :key="item.key" draggable="true"
+            class="list-group-item d-flex justify-content-between align-items-center py-0" @drop="dropped"
+            @dragenter="dragEnter" @dragover="dragOver(item.order, $event)" @dragleave="dragLeave" draggable="true"
+            @dragstart="dragStart(item.order, $event)" @dragend="dragEnd">
+            <button type="button" class="draggable__btn btn btn-link d-flex p-0 me-5 border-0">
+              <span class="material-icons-outlined text-black-50">drag_indicator</span>
+            </button>
+            <div class="form-check d-flex align-items-center w-100">
+              <input class="checkbox form-check-input me-5" type="checkbox" :id="item.key" :checked="item.checked" @click="updateChecked(item)">
+              <label class="form-check-label w-100 py-3" :for="item.key">
+                {{ item.toDo }}
+              </label>
+            </div>
             <button type="button" class="btn btn-link d-flex p-2 border-0" @click="deleteData(item.key)">
-              <span class="material-icons-outlined text-black-50">close</span>              
+              <span class="material-icons-outlined text-black-50">close</span>
             </button>
           </li>
         </ul>
       </section>
       <div class="d-flex justify-content-center px-3">
-        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="googleLogin" v-if="!hasLogin">
+        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3"
+          @click="googleLogin" v-if="!hasLogin">
           <img src="assets/images/google.svg" alt="google" class="me-3">
           <span class="d-none d-md-block">透過 Google </span>登入
         </button>
-        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3" @click="facebookLogin" v-if="!hasLogin">
+        <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3"
+          @click="facebookLogin" v-if="!hasLogin">
           <i class="fab fa-facebook-f me-3 text-blue"></i>
           <span class="d-none d-md-block">透過 Facebook </span>登入
         </button>
