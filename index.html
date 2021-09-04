@@ -83,8 +83,7 @@
                 @dragover="dragOver(item.order, $event)"
                 @dragleave="dragLeave" draggable="true"
                 @dragend="dragEnd"
-                @touchstart="dragStart(item.order, $event)"
-                @touchend="dragEnd">
+                >
                 <button type="button" class="draggable__btn btn btn-link d-flex p-0 me-5 border-0">
                   <span class="material-icons-outlined text-black-50">drag_indicator</span>
                 </button>
@@ -152,6 +151,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <!-- TODO: Add SDKs for Firebase products that you want to use
         https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script src="./assets/js/dragdropTouch.js"></script>
     <script src="./assets/js/all.js"></script>
   </body>
 </html>
