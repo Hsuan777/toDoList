@@ -19,7 +19,7 @@ const app = Vue.createApp({
   data() {
     return {
       // toDoList
-      toDoList: {},
+      toDoList: [],
       toDo: '',
       hasLogin: false,
       uid: '',
@@ -234,6 +234,12 @@ const app = Vue.createApp({
         }
       }
       return `${formatTime(min)} : ${formatTime(sec)}`;
+    },
+    awaitData() {
+      return this.toDoList.filter(item => item.checked === false);
+    },
+    finishedData() {
+      return this.toDoList.filter(item => item.checked === true);
     },
   },
   watch: {

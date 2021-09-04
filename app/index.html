@@ -8,7 +8,7 @@ current: index
   <div class="row">
     <div class="col-md-8 col-lg-6 mx-auto">
       <h1 class="text-center mb-3">TODO LIST</h1>
-      <section v-if="hasLogin">
+      <section v-if="hasLogin" class="mb-10">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div class="progress me-3 w-100">
             <div class="progress-bar"
@@ -42,25 +42,59 @@ current: index
           </p>
           <input type="button" value="清空全部" class="btn btn-outline-primary" @click="deleteAll">
         </div>
-        <ul class="list-group shadow mb-3">
-          <li v-for="item in toDoList" :key="item.key" draggable="true"
-            class="list-group-item d-flex justify-content-between align-items-center py-0" @drop="dropped"
-            @dragenter="dragEnter" @dragover="dragOver(item.order, $event)" @dragleave="dragLeave" draggable="true"
-            @dragstart="dragStart(item.order, $event)" @dragend="dragEnd">
-            <button type="button" class="draggable__btn btn btn-link d-flex p-0 me-5 border-0">
-              <span class="material-icons-outlined text-black-50">drag_indicator</span>
-            </button>
-            <div class="form-check d-flex align-items-center w-100">
-              <input class="checkbox form-check-input me-5" type="checkbox" :id="item.key" :checked="item.checked" @click="updateChecked(item)">
-              <label class="form-check-label w-100 py-3" :for="item.key">
-                {{ item.toDo }}
-              </label>
-            </div>
-            <button type="button" class="btn btn-link d-flex p-2 border-0" @click="deleteData(item.key)">
-              <span class="material-icons-outlined text-black-50">close</span>
-            </button>
-          </li>
-        </ul>
+        <nav>
+          <div class="nav nav-tabs border-0" id="nav-tab" role="tablist">
+            <button class="nav-link flex-grow-1 active" id="nav-await-tab" data-bs-toggle="tab" data-bs-target="#nav-await" type="button" role="tab" aria-controls="nav-await" aria-selected="true">待完成</button>
+            <button class="nav-link flex-grow-1" id="nav-finished-tab" data-bs-toggle="tab" data-bs-target="#nav-finished" type="button" role="tab" aria-controls="nav-finished" aria-selected="false">已完成</button>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade show active" id="nav-await" role="tabpanel" aria-labelledby="nav-await-tab">
+            <ul class="list-group shadow mb-3">
+              <li class="list-group-item d-flex justify-content-center align-items-center" v-if="awaitData.length === 0">
+                <p class="text-secondary mb-0">沒有要做的事喔！</p>
+              </li>
+              <li v-for="item in awaitData" :key="item.key" draggable="true"
+                class="list-group-item d-flex justify-content-between align-items-center py-0" @drop="dropped"
+                @dragenter="dragEnter" @dragover="dragOver(item.order, $event)" @dragleave="dragLeave" draggable="true"
+                @dragstart="dragStart(item.order, $event)" @dragend="dragEnd">
+                <button type="button" class="draggable__btn btn btn-link d-flex p-0 me-5 border-0">
+                  <span class="material-icons-outlined text-black-50">drag_indicator</span>
+                </button>
+                <div class="form-check d-flex align-items-center w-100">
+                  <input class="checkbox form-check-input me-5" type="checkbox" :id="item.key" :checked="item.checked" @click="updateChecked(item)">
+                  <label class="form-check-label w-100 py-3" :for="item.key">
+                    {{ item.toDo }}
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="tab-pane fade" id="nav-finished" role="tabpanel" aria-labelledby="nav-finished-tab">
+            <ul class="list-group shadow mb-3">
+              <li class="list-group-item d-flex justify-content-center align-items-center" v-if="finishedData.length === 0">
+                <p class="text-secondary mb-0">沒有已完成的事喔！</p>
+              </li>
+              <li v-for="item in finishedData" :key="item.key" draggable="true"
+                class="list-group-item d-flex justify-content-between align-items-center py-0" @drop="dropped"
+                @dragenter="dragEnter" @dragover="dragOver(item.order, $event)" @dragleave="dragLeave" draggable="true"
+                @dragstart="dragStart(item.order, $event)" @dragend="dragEnd">
+                <button type="button" class="draggable__btn btn btn-link d-flex p-0 me-5 border-0">
+                  <span class="material-icons-outlined text-black-50">drag_indicator</span>
+                </button>
+                <div class="form-check d-flex align-items-center w-100">
+                  <input class="checkbox form-check-input me-5" type="checkbox" :id="item.key" :checked="item.checked" @click="updateChecked(item)">
+                  <label class="form-check-label w-100 py-3" :for="item.key">
+                    {{ item.toDo }}
+                  </label>
+                </div>
+                <button type="button" class="btn btn-link d-flex p-2 border-0" @click="deleteData(item.key)">
+                  <span class="material-icons-outlined text-black-50">close</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
       </section>
       <div class="d-flex justify-content-center px-3">
         <button type="button" class="btn btn-light text-black-50 d-flex align-items-center mt-20 me-3"
