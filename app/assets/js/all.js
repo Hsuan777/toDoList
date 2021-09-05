@@ -171,7 +171,6 @@ const app = Vue.createApp({
     },
     // 放至有效的目標容器
     dropped(e) {
-      this.cancelDefault(e)
       if (e.target === this.targetSource) {
         return ;
       }
@@ -184,7 +183,6 @@ const app = Vue.createApp({
     },
     // 進入目標容器
     dragEnter(e) {
-      this.cancelDefault(e)
       // 狀態很快會變成"經過容器"
       // 當不是原本的目標容器時，變化 CSS 效果
       if (e.target !== this.targetSource && e.target.tagName === 'LI') {
@@ -193,7 +191,6 @@ const app = Vue.createApp({
     },
     // 經過目標容器
     dragOver(order, e) {
-      this.cancelDefault(e)
       this.newOrder = order;
       // 讓拖回原本的目標容器也會有 CSS 效果
       if (e.target === this.targetSource) {
@@ -202,14 +199,7 @@ const app = Vue.createApp({
     },
     // 離開容器
     dragLeave(e) {
-      this.cancelDefault(e)
-      // e.target 指得是 li
       e.target.classList.remove('list-group--hover', 'list-group--over')
-    },
-    // 取消預設行為
-    cancelDefault(e) {
-      e.preventDefault();
-      e.stopPropagation();
     },
     changeData(oldOrder, newOrder) {
       let originToDo = this.toDoList[newOrder].toDo; 

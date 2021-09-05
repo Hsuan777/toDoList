@@ -63,8 +63,12 @@ current: index
                 <p class="text-secondary mb-0">沒有要做的事喔！</p>
               </li>
               <li v-for="item in awaitData" :key="item.key" draggable="true"
-                class="list-group-item d-flex justify-content-between align-items-center py-0" @drop="dropped"
-                @dragenter="dragEnter" @dragover="dragOver(item.order, $event)" @dragleave="dragLeave" draggable="true"
+                class="list-group-item d-flex justify-content-between align-items-center py-0"
+                draggable="true"
+                @drop.stop.prevent="dropped"
+                @dragenter.stop.prevent="dragEnter"
+                @dragover.stop.prevent="dragOver(item.order, $event)"
+                @dragleave.stop.prevent="dragLeave"
                 @dragstart="dragStart(item.order, $event)" @dragend="dragEnd">
                 <button type="button" class="draggable__btn btn btn-link d-flex p-0 me-5 border-0">
                   <span class="material-icons-outlined text-black-50">drag_indicator</span>
