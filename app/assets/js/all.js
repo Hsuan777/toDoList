@@ -21,9 +21,11 @@ const app = Vue.createApp({
       // toDoList
       toDoList: [],
       toDo: '',
+      postToDoObject: {},
       hasLogin: false,
       uid: '',
       totalTime: 0,
+      isUrgent: false,
       // 番茄鐘
       seconds: 60,
       minutes : 25,
@@ -57,16 +59,19 @@ const app = Vue.createApp({
       // 取得推送亂數 ID
       const key = db.ref(`${this.uid}`).push().key;
 
-      // 推送，在子層建立資料
-      db.ref(`${this.uid}`).child(key).set({
+      this.postToDoObject = {
         // 加入相同 key 值，方便刪除
         key: key,
         toDo: this.toDo,
         date: new Date().getTime(),
         order: this.toDoList.length + 1,
         checked: false,
-      })
+        isUrgent: this.isUrgent,
+      }
+      // 推送，在子層建立資料
+      db.ref(`${this.uid}`).child(key).set(this.postToDoObject)
       this.toDo = '';
+      this.postToDoObject = {};
     },
     updateChecked(item) {
       let tempObj = item;
@@ -226,11 +231,14 @@ const app = Vue.createApp({
       return `${formatTime(min)} : ${formatTime(sec)}`;
     },
     awaitData() {
-      return this.toDoList.filter(item => item.checked === false);
+      return this.toDoList.filter(item => item.isUrgent === false && item.checked === false);
     },
     finishedData() {
       return this.toDoList.filter(item => item.checked === true);
     },
+    urgentData() {
+      return this.toDoList.filter(item => item.isUrgent === true && item.checked === false);
+    }
   },
   watch: {
     totalTime(newValue) {
