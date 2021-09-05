@@ -179,8 +179,6 @@ var app = Vue.createApp({
     },
     // 放至有效的目標容器
     dropped: function dropped(e) {
-      this.cancelDefault(e);
-
       if (e.target === this.targetSource) {
         return;
       }
@@ -189,66 +187,28 @@ var app = Vue.createApp({
     },
     // 拖曳結束，譬如放開滑鼠時，鍵盤 keyup 時
     dragEnd: function dragEnd(e) {
-      if (e.target === this.targetSource) {
-        return;
-      }
-
       e.target.classList.remove('list-group--hover');
       this.changeData(this.oldOrder, this.newOrder);
     },
     // 進入目標容器
     dragEnter: function dragEnter(e) {
-      this.cancelDefault(e); // 狀態很快會變成"經過容器"
+      // 狀態很快會變成"經過容器"
       // 當不是原本的目標容器時，變化 CSS 效果
-
       if (e.target !== this.targetSource && e.target.tagName === 'LI') {
         e.target.classList.add('list-group--hover', 'list-group--over');
       }
     },
     // 經過目標容器
     dragOver: function dragOver(order, e) {
-      this.cancelDefault(e);
       this.newOrder = order; // 讓拖回原本的目標容器也會有 CSS 效果
 
       if (e.target === this.targetSource) {
         e.target.classList.add('list-group--hover');
       }
     },
-    touchStart: function touchStart(order, e) {
-      this.oldOrder = order;
-      this.targetSource = e.touches[0].target.parentElement.parentElement;
-      e.touches['0'].target.parentElement.parentElement.classList.add('list-group--hover');
-    },
-    // touch 移動時
-    touchMove: function touchMove(order, e) {
-      this.cancelDefault(e);
-      e.touches['0'].target.parentElement.parentElement.classList.add('list-group--hover', 'list-group--over'); // console.log(e);
-      // console.log(e.targetTouches);
-    },
-    // touch 放開時
-    touchEnd: function touchEnd(e) {
-      // console.log(e);
-      // console.log(this.targetSource);
-      this.targetSource.classList.remove('list-group--hover', 'list-group--over'); // e.target.parentElement.parentElement.classList.remove('list-group--hover', 'list-group--over');
-
-      if (e.target.parentElement.parentElement === this.targetSource) {
-        return;
-      } // this.changeData(this.oldOrder, this.newOrder);
-
-    },
-    pointerOver: function pointerOver(e) {
-      console.log(e);
-    },
     // 離開容器
     dragLeave: function dragLeave(e) {
-      this.cancelDefault(e); // e.target 指得是 li
-
       e.target.classList.remove('list-group--hover', 'list-group--over');
-    },
-    // 取消預設行為
-    cancelDefault: function cancelDefault(e) {
-      e.preventDefault();
-      e.stopPropagation();
     },
     changeData: function changeData(oldOrder, newOrder) {
       var originToDo = this.toDoList[newOrder].toDo;
