@@ -1,4 +1,4 @@
-# Firebase Auto + Database ─ 待辦清單     
+# Firebase Auth + Database ─ 待辦清單     
 經典 To-Do List，搭配番茄鐘，工作效率加倍。
 
 - 使用 Authentication  開啟帳號驗證登入，可取得帳號相關資料
