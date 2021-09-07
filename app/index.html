@@ -67,7 +67,7 @@ current: index
           <div class="tab-pane fade" id="nav-urgent" role="tabpanel" aria-labelledby="nav-urgent-tab">
             <ul class="list-group shadow mb-3">
               <li class="list-group-item d-flex justify-content-center align-items-center" v-if="urgentData.length === 0">
-                <p class="text-secondary mb-0">還沒輸入急迫的事喔！</p>
+               <p class="text-secondary mb-0">還沒輸入急迫的事喔！</p>
               </li>
               <li v-for="item in urgentData" :key="item.key" draggable="true"
                 class="list-group-item d-flex justify-content-between align-items-center py-0"
@@ -92,7 +92,7 @@ current: index
           <div class="tab-pane fade show active" id="nav-await" role="tabpanel" aria-labelledby="nav-await-tab">
             <ul class="list-group shadow mb-3">
               <li class="list-group-item d-flex justify-content-center align-items-center" v-if="awaitData.length === 0">
-                <p class="text-secondary mb-0">沒有要做的事喔！</p>
+                <p class="text-secondary mb-0">沒有要做的事喔！</p>
               </li>
               <li v-for="item in awaitData" :key="item.key" draggable="true"
                 class="list-group-item d-flex justify-content-between align-items-center py-0"
@@ -117,7 +117,7 @@ current: index
           <div class="tab-pane fade" id="nav-finished" role="tabpanel" aria-labelledby="nav-finished-tab">
             <ul class="list-group shadow mb-3">
               <li class="list-group-item d-flex justify-content-center align-items-center" v-if="finishedData.length === 0">
-                <p class="text-secondary mb-0">沒有已完成的事喔！</p>
+                <p class="text-secondary mb-0">沒有已完成的事喔！</p>
               </li>
               <li v-for="item in finishedData" :key="item.key" draggable="true"
                 class="list-group-item d-flex justify-content-between align-items-center py-0" @drop="dropped"
